@@ -1,2 +1,2 @@
 # testSQL
-resolved excersices to SQL challenge
+resolved excersices to SQL challenge with InnoDB engine.
