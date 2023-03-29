@@ -41,30 +41,29 @@ VALUES (1, 'Bob', 21),
 
 # Script de la solución
 DELIMITER //
-CREATE PROCEDURE PersonaDelete (IN id_persona INT)
+CREATE PROCEDURE `PersonaDelete`(IN `id_persona` INT)
 BEGIN
-	DECLARE delete_person BOOLEAN DEFAULT FALSE;
-	DECLARE EXIT HANDLER FOR NOT FOUND
+	-- creo una bandera para saber cuando se elimine al usuario
+	DECLARE `delete_person` BOOLEAN DEFAULT FALSE;
 	
-		# Se desactiva el checkeo de las claves externas asi puedo ingresar valores q no estan registrados en la tabla "pasaportes"
-		
-		
-		DELETE FROM personas WHERE id = id_persona;
-        DELETE FROM pasaportes WHERE id = (SELECT idFechaPasaporte FROM personas WHERE id = id_persona);
+		-- Se eliminan los registros de ambas tablas
+		DELETE FROM `pasaportes` WHERE `id` = (SELECT `idFechaPasaporte` FROM `personas` WHERE `id` = `id_persona`);
+		DELETE FROM `personas` WHERE `id` = `id_persona`;
         
+        -- Se setea la variable para identificar la eliminacion del registro
 		IF ROW_COUNT() > 0 THEN
-			SET delete_person = TRUE;
+			SET `delete_person` = TRUE;
 		END IF;
-        
-	IF delete_person THEN
-		SELECT 0 AS salida;
+	-- Consulta para saber que retornar en la tabla output
+	IF `delete_person` THEN
+		SELECT 0 AS `output`;
 	ELSE
-		SELECT -1 AS salida;
+		SELECT -1 AS `output`;
 	END IF;
 END //
 DELIMITER ;
 
-CALL PersonaDelete(14);
+CALL PersonaDelete(1);
 SELECT * FROM personas;
 SELECT * FROM pasaportes;
 
